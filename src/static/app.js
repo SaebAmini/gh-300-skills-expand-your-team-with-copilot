@@ -3,38 +3,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const darkModeToggle = document.getElementById("dark-mode-toggle");
   const themeIcon = document.querySelector(".theme-icon");
 
-  // Check for saved dark mode preference
-  function initializeDarkMode() {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode === "enabled") {
-      document.body.classList.add("dark-mode");
-      updateThemeIcon(true);
+  // Only initialize dark mode if elements exist
+  if (darkModeToggle && themeIcon) {
+    // Check for saved dark mode preference
+    function initializeDarkMode() {
+      const savedDarkMode = localStorage.getItem("darkMode");
+      if (savedDarkMode === "enabled") {
+        document.body.classList.add("dark-mode");
+        updateThemeIcon(true);
+      }
     }
-  }
 
-  // Update theme icon based on current mode
-  function updateThemeIcon(isDarkMode) {
-    themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
-  }
-
-  // Toggle dark mode
-  function toggleDarkMode() {
-    const isDarkMode = document.body.classList.toggle("dark-mode");
-    updateThemeIcon(isDarkMode);
-    
-    // Save preference to localStorage
-    if (isDarkMode) {
-      localStorage.setItem("darkMode", "enabled");
-    } else {
-      localStorage.removeItem("darkMode");
+    // Update theme icon and aria-label based on current mode
+    function updateThemeIcon(isDarkMode) {
+      themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+      darkModeToggle.setAttribute(
+        "aria-label",
+        isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+      );
     }
+
+    // Toggle dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.body.classList.toggle("dark-mode");
+      updateThemeIcon(isDarkMode);
+
+      // Save preference to localStorage
+      if (isDarkMode) {
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        localStorage.removeItem("darkMode");
+      }
+    }
+
+    // Event listener for dark mode toggle
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+
+    // Initialize dark mode on page load
+    initializeDarkMode();
   }
-
-  // Event listener for dark mode toggle
-  darkModeToggle.addEventListener("click", toggleDarkMode);
-
-  // Initialize dark mode on page load
-  initializeDarkMode();
 
   // DOM elements
   const activitiesList = document.getElementById("activities-list");
